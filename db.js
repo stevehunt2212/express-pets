@@ -2,7 +2,7 @@ const dotenv = require("dotenv")
 dotenv.config()
 const { MongoClient } = require("mongodb")
 
-const client = new MongoClient(process.env.CONNECTIONSTRING)
+const client = new MongoClient(process.env.CONNECTION_STRING)
 
 async function start() {
   await client.connect()
