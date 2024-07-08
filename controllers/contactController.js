@@ -76,9 +76,27 @@ exports.submitContact = async function (req, res, next) {
       </p>
       `,
     })
-    await Promise.all([promise1, promise2])
+    const promise3 = await contactsCollection.insertOne(ourObject)
+
+    await Promise.all([promise1, promise2, promise3])
   } catch (err) {
     next(err)
   }
   res.send("Thanks for sending your contact data")
+}
+exports.viewPetContacts = async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    console.log("bad id")
+    return res.redirect("/")
+  }
+
+  const pet = await petsCollection.findOne({ _id: new ObjectId(req.params.id) })
+
+  if (!pet) {
+    console.log("pet does not exist")
+    return res.redirect("/")
+  }
+
+  const contacts = await contactsCollection.find({ petId: new ObjectId(req.params.id) }).toArray()
+  res.render("pet-contacts", { contacts, pet })
 }
